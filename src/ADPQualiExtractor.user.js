@@ -14,10 +14,6 @@
 // @grant        none
 // ==/UserScript==
 
-// https://stackoverflow.com/questions/18989345/how-do-i-reload-a-greasemonkey-script-when-ajax-changes-the-url-without-reloadin
-// https://stackoverflow.com/questions/629671/how-can-i-intercept-xmlhttprequests-from-a-greasemonkey-script
-// https://stackoverflow.com/questions/33855641/copy-output-of-a-javascript-variable-to-the-clipboard
-
 (async function(axios) {
     'use strict';
 
@@ -79,7 +75,7 @@
             e.hasOwnProperty("timeline") ? workDays.push(newFormat(e)) : offDays.push(newFormat(e));
         })
 
-        console.log('workDays', workDays.sort((x, y) => new Date(x.oldDate).getTime() - new Date(y.oldDate).getTime()));
+        workDays.sort((x, y) => new Date(x.oldDate).getTime() - new Date(y.oldDate).getTime());
 
         return formatTable(workDays);
     }
@@ -107,7 +103,6 @@
         let content = (header.map(m => m.title).join('	')) + '\r\n';
 
         timeTable.forEach( e => {
-            e.timelineFormatted = [];
             for (let i = 0; i < e.timeline.length; i = i+2) {
                 let start = '', finish = '';
                 start = `${new Date(e.timeline[i].dateTime).getHours()}:${new Date(e.timeline[i].dateTime).getMinutes()}`;
