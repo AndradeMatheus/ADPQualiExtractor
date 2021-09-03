@@ -8,8 +8,8 @@
 // @homepageURL  https://github.com/AndradeMatheus/ADPQualiExtractor/
 // @match        https://expert.brasil.adp.com/
 // @include      https://expert.brasil.adp.com/*
-// @require      https://github.com/AndradeMatheus/ADPQualiExtractor/master/src/axios.min.js
-// @require      https://github.com/AndradeMatheus/ADPQualiExtractor/master/src/axiosGmxhrAdapter.min.js
+// @require      https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/src/axios.min.js
+// @require      https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/src/axiosGmxhrAdapter.min.js
 // @icon         https://www.google.com/s2/favicons?domain=adp.com
 // @grant        none
 // ==/UserScript==
@@ -31,7 +31,7 @@
     }
 
     window.addEventListener('load', () => {
-        addButton('CCPY', copyTable);
+        addButton('COPY', copyTable);
     })
 
     function addButton(text, onclick, cssObj) {
