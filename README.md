@@ -4,7 +4,7 @@ Proof of concept ADP timesheet extractor.
 
 ## Installation
 
-Open src/ADPQualiExtractor.user.js as RAW visualization with TamperMonkey/GreaseMonkey installed on your browser.
+Open [this link](https://github.com/AndradeMatheus/ADPQualiExtractor/raw/master/src/ADPQualiExtractor.user.js) with TamperMonkey/GreaseMonkey installed on your browser.
 
 [Tampermonkey at chrome web store](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
 
