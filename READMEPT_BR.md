@@ -21,8 +21,9 @@ Depois de realizar login no site do ADP web, vá para o histórico de apontament
 
 Um botão com a label "COPY" vai estar disponível no canto direito superior do site.
 
-![ADP WEBSITE](https://i.imgur.com/XfcjUEt.png)
+![ADP WEBSITE](https://i.imgur.com/7N4nSdz.png)
 
-Pressione o botão "COPY" para copiar o mês atualmente visualizado para a área de transferência.
+* Pressione o botão "COPY" para copiar o mês atualmente visualizado para a área de transferência com os horários sem intervalo (apenas a primeira entrada e a última saída).
+* Pressione o botão "COPY W/ INTERVALS" para copiar o mês com todos os intervalos.
 
 O formato é baseado no timesheet da Qualicorp e deve ser colado em um arquivo Excel.
