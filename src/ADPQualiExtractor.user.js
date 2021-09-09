@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ADP QUALICORP TIMESHET CLIPBOARD
 // @namespace    https://github.com/AndradeMatheus/ADPQualiExtractor/
-// @version      0.2
+// @version      0.3
 // @description  Copy month's appointments to clipboard
 // @author       Matheus Andrade (Tetis) [github.com/AndradeMatheus]
 // @copyright    2021+, Matheus Andrade (https://github.com/AndradeMatheus)
@@ -27,23 +27,26 @@
     }
 
     window.addEventListener('load', () => {
-        addButton('COPY', copyTable);
+        addButton('COPY', false, { top: '7%', right: '4%'});
+        addButton('COPY W/ INTERVALS', true, { top: '11%', right: '4%'});
     })
 
-    function addButton(text, onclick, cssObj) {
-        cssObj = cssObj || {position: 'absolute', top: '7%', right:'4%', 'z-index': 3}
+    function addButton(text, intervals, position, cssObj) {
+        cssObj = cssObj || {position: 'absolute', top: position.top, right: position.right, 'z-index': 3}
         let button = document.createElement('button'), btnStyle = button.style
         document.body.appendChild(button)
         button.innerHTML = text
-        button.onclick = onclick
+        button.addEventListener('click', function(){
+            copyTable(intervals);
+        });
         Object.keys(cssObj).forEach(key => btnStyle[key] = cssObj[key])
         return button
     }
 
-    async function copyTable() {
+    async function copyTable(intervals) {
         const date = getDate();
         const content = await getContent(date);
-        const table = formatTimeTable(content);
+        const table = formatTimeTable(content, intervals);
         copyToClipBoard(table);
     }
 
@@ -66,7 +69,7 @@
         });
     }
 
-    function formatTimeTable(content) {
+    function formatTimeTable(content, intervals) {
         const timeTable = content.data.timetable;
         let offDays = [];
         let workDays = [];
@@ -77,7 +80,7 @@
 
         workDays.sort((x, y) => new Date(x.oldDate).getTime() - new Date(y.oldDate).getTime());
 
-        return formatTable(workDays);
+        return formatTable(workDays, intervals);
     }
 
     function copyToClipBoard(content) {
@@ -98,18 +101,30 @@
         }
     }
 
-    function formatTable(timeTable){
+    function formatTable(timeTable, intervals){
         const header = [{key:"date", title:"Data"}, {key:"timelineStart", title: "Início"}, {key:"timelineEnd", title:"Fim"}];
         let content = (header.map(m => m.title).join('	')) + '\r\n';
 
         timeTable.forEach( e => {
             const timelineSize = e.timeline.length;
-            let finish;
-            const start = `${new Date(e.timeline[0].dateTime).getHours()}:${new Date(e.timeline[0].dateTime).getMinutes()}`;
-            e.timeline[timelineSize-1] ?
-                finish = `${new Date(e.timeline[timelineSize-1].dateTime).getHours()}:${new Date(e.timeline[timelineSize-1].dateTime).getMinutes()}`
+            let finish = '', start = '';
+
+            if(!intervals){
+                start = `${new Date(e.timeline[0].dateTime).getHours()}:${new Date(e.timeline[0].dateTime).getMinutes()}`;
+                e.timeline[timelineSize-1] ?
+                    finish = `${new Date(e.timeline[timelineSize-1].dateTime).getHours()}:${new Date(e.timeline[timelineSize-1].dateTime).getMinutes()}`
                 : finish = 'ABERTO';
                 content += (`${JSON.stringify(e.date)}	${start}	${finish}\r\n`);
+            }else{
+                for (let i = 0; i < e.timeline.length; i = i+2) {
+                    let start = '', finish = '';
+                    start = `${new Date(e.timeline[i].dateTime).getHours()}:${new Date(e.timeline[i].dateTime).getMinutes()}`;
+                    e.timeline[i+1] ?
+                        finish = `${new Date(e.timeline[i+1].dateTime).getHours()}:${new Date(e.timeline[i+1].dateTime).getMinutes()}`
+                    : finish = 'ABERTO';
+                    content += (`${JSON.stringify(e.date)}	${start}	${finish}\r\n`);
+                }
+            }
         })
 
         return content;
