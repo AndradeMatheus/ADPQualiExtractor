@@ -25,8 +25,9 @@ After a successful login on ADP's appointment website, head over to your appoint
 
 A button labeled "COPY" will be available at the top-right corner
 
-![ADP WEBSITE](https://i.imgur.com/XfcjUEt.png)
+![ADP WEBSITE](https://i.imgur.com/7N4nSdz.png)
 
-Press the "COPY" button to copy the current visualized appointment month to your clipboard.
+* Press the "COPY" button to copy the current visualized appointment month to your clipboard with no intervals (first entry and last exit).
+* Press the "COPY W/ INTERVALS" button to copy a month with all intervals.
 
 The format is based on Qualicorp's timesheet and should be pasted on an Excel file.
