@@ -5,9 +5,9 @@ Proof of concept of a ADP timesheet extractor.
 ## Installation
 
 1. Install Tampermonkey/Greasemonkey on your browser.
-  ..* [Tampermonkey at chrome web store](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
-  ..* [Tampermonkey at mozila addons](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
-  ..* [Tampermonkey at microsoft edge store](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
+  * [Tampermonkey at chrome web store](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
+  * [Tampermonkey at mozila addons](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
+  * [Tampermonkey at microsoft edge store](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
 
 2. With Tampermonkey/Greasemonkey installed, open [this link](https://github.com/AndradeMatheus/ADPQualiExtractor/raw/master/src/ADPQualiExtractor.user.js) and press install.
 
