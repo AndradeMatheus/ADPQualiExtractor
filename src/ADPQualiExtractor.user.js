@@ -103,14 +103,13 @@
         let content = (header.map(m => m.title).join('	')) + '\r\n';
 
         timeTable.forEach( e => {
-            for (let i = 0; i < e.timeline.length; i = i+2) {
-                let start = '', finish = '';
-                start = `${new Date(e.timeline[i].dateTime).getHours()}:${new Date(e.timeline[i].dateTime).getMinutes()}`;
-                e.timeline[i+1] ?
-                    finish = `${new Date(e.timeline[i+1].dateTime).getHours()}:${new Date(e.timeline[i+1].dateTime).getMinutes()}`
-                    : finish = 'ABERTO';
+            const timelineSize = e.timeline.length;
+            let finish;
+            const start = `${new Date(e.timeline[0].dateTime).getHours()}:${new Date(e.timeline[0].dateTime).getMinutes()}`;
+            e.timeline[timelineSize-1] ?
+                finish = `${new Date(e.timeline[timelineSize-1].dateTime).getHours()}:${new Date(e.timeline[timelineSize-1].dateTime).getMinutes()}`
+                : finish = 'ABERTO';
                 content += (`${JSON.stringify(e.date)}	${start}	${finish}\r\n`);
-            }
         })
 
         return content;
