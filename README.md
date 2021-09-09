@@ -1,6 +1,6 @@
 # Quali ADP Extractor
 
-Proof of concept ADP timesheet extractor.
+Proof of concept of a ADP timesheet extractor.
 
 ## Installation
 
