@@ -15,12 +15,12 @@ Proof of concept of a ADP timesheet extractor.
 
 ## Usage
 
-After a successful login on ADP's appointment website, head over to your appointment history and check out the month you want to be copied.
+After a successful login on ADP's appointment website, head over to your appointment history and check out the month you want to copy.
 
-A button labeled 'COPY' will be available at the top-right corner
+A button labeled "COPY" will be available at the top-right corner
 
 ![ADP WEBSITE](https://i.imgur.com/XfcjUEt.png)
 
-Press the "COPY" to copy the current visualized appointment month to your clipboard.
+Press the "COPY" button to copy the current visualized appointment month to your clipboard.
 
 The format is based on Qualicorp's timesheet and should be pasted on an Excel file.
