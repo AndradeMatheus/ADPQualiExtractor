@@ -2,6 +2,12 @@
 
 Proof of concept of a ADP timesheet extractor.
 
+This is currently working, but is deprecated in favor of a in-development [Chrome Extension](https://cdn.discordapp.com/attachments/842058104844714004/884799525003358249/unknown.png) with more features to come.
+
+**Other Readme languages**:
+
+* [PT-BR](https://rentry.co/ADPQualiExtractorPT-BR)
+
 ## Installation
 
 1. Install Tampermonkey/Greasemonkey on your browser.
