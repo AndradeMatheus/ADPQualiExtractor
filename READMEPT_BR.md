@@ -4,8 +4,6 @@ POC de um script de extração de apontamentos do ADP.
 
 Esse script está funcionando atualmente, porém está descontinuado em favor do desenvolvimento de uma [extensão do chrome](https://cdn.discordapp.com/attachments/842058104844714004/884799525003358249/unknown.png) com mais funcionalidades previstas.
 
-[GitHub link](https://github.com/AndradeMatheus/ADPQualiExtractor/)
-
 ## Instalação
 
 1. Instale Tampermonkey/Greasemonkey no seu navegador.
