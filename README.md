@@ -6,7 +6,7 @@ This is currently working, but is deprecated in favor of a in-development [Chrom
 
 **Other Readme languages**:
 
-* [PT-BR](https://rentry.co/ADPQualiExtractorPT-BR)
+* [PT-BR](https://github.com/AndradeMatheus/ADPQualiExtractor/blob/master/READMEPT_BR.md)
 
 ## Installation
 
