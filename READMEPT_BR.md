@@ -15,6 +15,8 @@ Esse script está funcionando atualmente, porém está descontinuado em favor do
 
 3. O script está pronto para ser executado automaticamente no https://expert.brasil.adp.com/
 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* OBS: Caso necessite atualizar o script manualmente, apenas acesse o link do passo 2.
+
 ## Uso
 
 Depois de realizar login no site do ADP web, vá para o histórico de apontamentos e visualize o mês que você deseja copiar.
