@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ADP QUALICORP TIMESHET CLIPBOARD
 // @namespace    https://github.com/AndradeMatheus/ADPQualiExtractor/
-// @version      0.6
+// @version      0.7
 // @description  Copy month's appointments to clipboard
 // @author       Matheus Andrade (Tetis) [github.com/AndradeMatheus]
 // @copyright    2021+, Matheus Andrade (https://github.com/AndradeMatheus)
@@ -17,44 +17,31 @@
 (async function(axios) {
     'use strict';
 
-    const timelineTypes = {
-        extraHours: 0,
-        undefinedFinish: 1,
-        incorrectAppointedStart: 2,
-        incorrectAppointedFinish: 3,
-        correctShouldBeFinish: 7,
-        correctAppointedStart: 10,
-        correctAppointedFinish: 21,
-    }
-
-    const icons = {
-        whiteCopyOutline: `<img src="https://img.icons8.com/pastel-glyph/32/000000/copy--v1.png" style="filter: invert(1)"/>`
-    }
-
     window.addEventListener('load', () => {
         setTimeout( function(){
-            addButton('Copiar Apontamento', icons.whiteCopyOutline, true, true);
+            addButton('Timesheet', customContent.whiteCopyOutline);
         }, 2000)
     })
 
-    function addButton(label, icon, intervals, extras) {
-        const sidebar = document.getElementsByClassName('display-block-md display-none bg-blue-4 text-center')[0];
-        const buttonHTML = getButtonHTML(label, icon);
+    function addButton(label, custom) {
+        const buttonHTML = getButtonHTML(label, custom);
         const buttonDOM = document.createElement('a');
         buttonDOM.innerHTML = buttonHTML;
         buttonDOM.addEventListener('click', function(){
-            copyTable(intervals, extras);
+            copyTable();
         });
 
-        sidebar.appendChild(buttonDOM);
+        const sidebar = document.getElementsByClassName('display-block-md display-none bg-blue-4 text-center')[0];
+        if(sidebar) sidebar.appendChild(buttonDOM);
+        else alert('Ocorreu um erro ao carregar o botão de cópia de timesheet :( \n Por favor, recarregue a página.');
 
         return buttonDOM
     }
 
-    async function copyTable(intervals, extras) {
+    async function copyTable() {
         const date = getDate();
         const content = await getContent(date);
-        const table = formatTimeTable(content, intervals, extras);
+        const table = formatTimeTable(content);
         copyToClipBoard(table);
     }
 
@@ -77,18 +64,18 @@
         });
     }
 
-    function formatTimeTable(content, intervals, extras) {
+    function formatTimeTable(content) {
         const timeTable = content.data.timetable;
         let offDays = [];
         let workDays = [];
 
         timeTable.forEach( e => {
-            e.hasOwnProperty("timeline") ? workDays.push(newFormat(e, extras)) : offDays.push(newFormat(e, extras));
+            e.hasOwnProperty("timeline") ? workDays.push(newFormat(e)) : offDays.push(newFormat(e));
         })
 
         workDays.sort((x, y) => new Date(x.oldDate).getTime() - new Date(y.oldDate).getTime());
 
-        return formatTable(workDays, intervals, extras);
+        return formatTable(workDays);
     }
 
     function copyToClipBoard(content) {
@@ -109,90 +96,67 @@
         }
     }
 
-    function formatTable(timeTable, intervals, extras){
+    function formatTable(timeTable){
         const header = [{key:"date", title:"Data"}, {key:"timelineStart", title: "Início"}, {key:"timelineEnd", title:"Fim"}, {key:"extraType", title:"Tipo"}];
         let content = (header.map(m => m.title).join('	')) + '\r\n';
 
         timeTable.forEach( e => {
-            const timelineSize = e.timeline.length;
-            let finish = '', start = '';
+            const allowedBankSeconds = 6300
+            let bankSeconds = 0, extraSeconds = 0;
+            let previousCheckedDate;
 
-            if(!intervals && !extras){
-                const opex = `${new Date(e.timeline[timelineSize-1].dateTime).getHours()-1}:${new Date(e.timeline[timelineSize-1].dateTime).getMinutes()}`
-                start = `${new Date(e.timeline[0].dateTime).getHours()}:${new Date(e.timeline[0].dateTime).getMinutes()}`;
-                e.timeline[timelineSize-1] ?
-                    finish = `${new Date(e.timeline[timelineSize-1].dateTime).getHours()}:${new Date(e.timeline[timelineSize-1].dateTime).getMinutes()}`
+            for (let i = 0; i < e.timeline.length; i = i+2) {
+                if(e.date !== previousCheckedDate) { bankSeconds = 0; extraSeconds = 0; }
+
+                let start = '', finish = '', extraType = '	NORMAL';
+
+                start = `${new Date(e.timeline[i].dateTime).getHours()}:${new Date(e.timeline[i].dateTime).getMinutes()}`;
+                e.timeline[i+1] ?
+                    finish = `${new Date(e.timeline[i+1].dateTime).getHours()}:${new Date(e.timeline[i+1].dateTime).getMinutes()}`
                 : finish = 'ABERTO';
-                content += (`${JSON.stringify(e.date)}	${start}	${opex}\r\n`);
-                content += (`${JSON.stringify(e.date)}	${opex}	${finish}\r\n`);
-            }else if(intervals && !extras){
-                for (let i = 0; i < e.timeline.length; i = i+2) {
-                    let start = '', finish = '';
-                    start = `${new Date(e.timeline[i].dateTime).getHours()}:${new Date(e.timeline[i].dateTime).getMinutes()}`;
-                    e.timeline[i+1] ?
-                        finish = `${new Date(e.timeline[i+1].dateTime).getHours()}:${new Date(e.timeline[i+1].dateTime).getMinutes()}`
-                    : finish = 'ABERTO';
-                    content += (`${JSON.stringify(e.date)}	${start}	${finish}\r\n`);
-                }
-            }else if(intervals && extras){
-                const allowedBankSeconds = 6300
-                let bankSeconds = 0, extraSeconds = 0;
-                let previousCheckedDate;
 
-                for (let i = 0; i < e.timeline.length; i = i+2) {
-                    if(e.date !== previousCheckedDate) { bankSeconds = 0; extraSeconds = 0; }
+                if(start === finish) continue;
 
-                    let start = '', finish = '', extraType = '	NORMAL';
+                if(e.timeline[i].itemType === timelineTypes.extraHours || bankSeconds > 0){
+                    let seconds = (
+                        new Date(`9999-12-31:${finish}`).getTime() - new Date(`9999-12-31:${start}`).getTime()
+                    ) / 1000;
 
-                    start = `${new Date(e.timeline[i].dateTime).getHours()}:${new Date(e.timeline[i].dateTime).getMinutes()}`;
-                    e.timeline[i+1] ?
-                        finish = `${new Date(e.timeline[i+1].dateTime).getHours()}:${new Date(e.timeline[i+1].dateTime).getMinutes()}`
-                    : finish = 'ABERTO';
+                    if(seconds > allowedBankSeconds || bankSeconds === allowedBankSeconds){
+                        if(bankSeconds === 0){
+                            bankSeconds = allowedBankSeconds;
+                            extraSeconds += seconds - allowedBankSeconds;
 
-                    if(start === finish) continue;
-
-                    if(e.timeline[i].itemType === timelineTypes.extraHours || bankSeconds > 0){
-                        let seconds = (
-                            new Date(`9999-12-31:${finish}`).getTime() - new Date(`9999-12-31:${start}`).getTime()
-                        ) / 1000;
-
-                        if(seconds > allowedBankSeconds || bankSeconds === allowedBankSeconds){
-                            if(bankSeconds === 0){
-                                bankSeconds = allowedBankSeconds;
-                                extraSeconds += seconds - allowedBankSeconds;
-
-                                const bankEnd = (new Date(new Date(`9999-12-31:${start}`).getTime() + allowedBankSeconds * 1000));
-                                const obj = {
-                                    dateTime: bankEnd,
-                                    itemType: 0
-                                }
-
-                                e.timeline.insert(i+1, obj);
-                                e.timeline.insert(i+2, obj);
-
-                                finish = `${bankEnd.getHours()}:${bankEnd.getMinutes()}`;
-
-                                extraType = `	BANCO`;
-                            }else{
-                                extraSeconds += seconds
-                                extraType = `	EXTRA`;
+                            const bankEnd = (new Date(new Date(`9999-12-31:${start}`).getTime() + allowedBankSeconds * 1000));
+                            const obj = {
+                                dateTime: bankEnd,
+                                itemType: 0
                             }
-                        }else{
-                            bankSeconds += seconds;
-                            extraType = `	BANCO`;
-                        }
-                    }
 
-                    content += (`${JSON.stringify(e.date)}	${start}	${finish}${extraType}\r\n`);
-                    previousCheckedDate = e.date;
+                            e.timeline.insert(i+1, obj);
+                            e.timeline.insert(i+2, obj);
+
+                            finish = `${bankEnd.getHours()}:${bankEnd.getMinutes()}`;
+
+                            extraType = `	BANCO`;
+                        }else{
+                            extraSeconds += seconds
+                            extraType = `	EXTRA`;
+                        }
+                    }else{
+                        bankSeconds += seconds;
+                        extraType = `	BANCO`;
+                    }
                 }
+
+                content += (`${JSON.stringify(e.date)}	${start}	${finish}${extraType}\r\n`);
+                previousCheckedDate = e.date;
             }
         })
-
         return content;
     }
 
-    function newFormat(element, extras) {
+    function newFormat(element) {
         const dateTemplate = element.date.split("T")[0];
         const day = dateTemplate.split('-')[2];
         const month = dateTemplate.split('-')[1];
@@ -204,8 +168,8 @@
         if(timelineFormatted){
             timelineFormatted.forEach( () => {
                 timelineFormatted.forEach( (x, i) => {
-                    if((x.itemType === timelineTypes.correctShouldBeFinish && !extras) || x.itemType === timelineTypes.undefinedFinish) { timelineFormatted.splice(i, 1); changed = true; }
-                    else if(x.itemType === timelineTypes.correctShouldBeFinish && extras) { x.itemType = timelineTypes.extraHours; timelineFormatted.insert(i, x) };
+                    if(x.itemType === timelineTypes.undefinedFinish) { timelineFormatted.splice(i, 1); changed = true; }
+                    else if(x.itemType === timelineTypes.correctShouldBeFinish) { x.itemType = timelineTypes.extraHours; timelineFormatted.insert(i, x) };
                 })
             })
         }
@@ -218,27 +182,47 @@
         }
     }
 
+    const timelineTypes = {
+        extraHours: 0,
+        undefinedFinish: 1,
+        incorrectAppointedStart: 2,
+        incorrectAppointedFinish: 3,
+        correctShouldBeFinish: 7,
+        correctAppointedStart: 10,
+        correctAppointedFinish: 21,
+    }
+
+    const customContent = {
+        whiteCopyOutline: {
+            icon:'<img src="https://img.icons8.com/pastel-glyph/32/000000/copy--v1.png" style="filter: invert(1)"/>',
+            style: '',
+            class: '',
+            div: ''
+        }
+    }
+
+    function getButtonHTML(label, custom){
+    return `<a
+        class="display-block w-100 text-left text-center-md relative border-none m0 p2 py2 p1-md py3-md text-white decoration-none bg-transparent bg-blue-3-hover pointer timelinecopy ${custom.class}"
+        style=${custom.style}
+        data-metrics-event-action="test"
+        data-testid="btn_timeline-copy"
+    >
+    ${custom.icon}
+    <span
+        class="
+        display-inline-block display-block-md
+        v-align-middle
+        font-std-6
+        fw-300
+        "
+        data-testid="txt_timeline-copy"
+    >${label}</span>
+    </a>
+    ${custom.div}`
+    }
+
     Array.prototype.insert = function ( index, item ) {
         this.splice( index, 0, item );
     };
-
-    function getButtonHTML(label, icon){
-        return`<a
-  class="display-block w-100 text-left text-center-md relative border-none m0 p2 py2 p1-md py3-md text-white decoration-none bg-transparent bg-blue-3-hover pointer timelinecopy"
-  data-metrics-event-action="test"
-  data-testid="btn_timeline-copy"
-  >
-  ${icon}
-  <span
-    class="
-      display-inline-block display-block-md
-      v-align-middle
-      font-std-6
-      fw-300
-    "
-    data-testid="txt_timeline-copy"
-    >${label}</span
-  >
-  </a>`
-    }
 })(axios);
