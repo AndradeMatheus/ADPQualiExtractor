@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ADP QUALICORP TIMESHET CLIPBOARD
 // @namespace    https://github.com/AndradeMatheus/ADPQualiExtractor/
-// @version      1.0.1
+// @version      1.0.2
 // @description  Copy month's appointments to clipboard
 // @author       Matheus Andrade (Tetis) [github.com/AndradeMatheus]
 // @copyright    2021+, Matheus Andrade (https://github.com/AndradeMatheus)
@@ -19,7 +19,7 @@
 
     window.addEventListener('load', () => {
         setTimeout( function(){
-            addButton('Timesheet', customContent.whiteCopyOutline, copyTable);
+            addButton('Timesheet', customContent.whiteCopyOutline, copyTimesheet);
         }, 2000)
     })
 
@@ -38,10 +38,10 @@
         return buttonDOM
     }
 
-    async function copyTable() {
+    async function copyTimesheet() {
         const date = getDate();
         const content = await getContent(date);
-        const table = formatTimeTable(content);
+        const table = formatTimesheet(content);
         copyToClipBoard(table);
     }
 
@@ -64,18 +64,11 @@
         });
     }
 
-    function formatTimeTable(content) {
-        const timeTable = content.data.timetable;
-        let offDays = [];
-        let workDays = [];
-
-        timeTable.forEach( e => {
-            e.hasOwnProperty("timeline") ? workDays.push(newFormat(e)) : offDays.push(newFormat(e));
-        })
-
-        workDays.sort((x, y) => new Date(x.oldDate).getTime() - new Date(y.oldDate).getTime());
-
-        return formatTable(workDays);
+    function formatTimesheet(content) {
+        const timesheet = content.data.timetable;
+        
+        const workdays = getWorkdays(timesheet);
+        return getFormattedTimesheet(workdays);
     }
 
     function copyToClipBoard(content) {
@@ -96,9 +89,27 @@
         }
     }
 
-    function formatTable(timeTable){
-        const header = [{key:"date", title:"Data"}, {key:"timelineStart", title: "Início"}, {key:"timelineEnd", title:"Fim"}, {key:"extraType", title:"Tipo"}];
-        let content = (header.map(m => m.title).join('	')) + '\r\n';
+    function getWorkdays(timesheet) {
+        let offdays = [];
+        let workdays = [];
+
+        timesheet.forEach( e => {
+            e.hasOwnProperty("timeline") ? workdays.push(getFormattedContent(e)) : offdays.push(getFormattedContent(e));
+        })
+
+        workdays.sort((x, y) => new Date(x.oldDate).getTime() - new Date(y.oldDate).getTime());
+
+        return workdays;
+    }
+
+    function getFormattedTimesheet(timeTable){
+        const headers = [
+            {key:"date", title:"Data"}, 
+            {key:"timelineStart", title: "Inicio"}, 
+            {key:"timelineEnd", title:"Fim"}, 
+            {key:"appointmentType", title:"Tipo"}
+        ];
+        let table = (headers.map(m => m.title).join('	')) + '\r\n';
 
         timeTable.forEach( e => {
             const allowedBankSeconds = 6300
@@ -108,16 +119,16 @@
             for (let i = 0; i < e.timeline.length; i = i+2) {
                 if(e.date !== previousCheckedDate) { bankSeconds = 0; extraSeconds = 0; }
 
-                let start = '', finish = '', extraType = '	NORMAL';
+                let start = '', finish = '', appointmentType = '	NORMAL';
 
                 start = `${new Date(e.timeline[i].dateTime).getHours()}:${new Date(e.timeline[i].dateTime).getMinutes()}`;
+                
                 e.timeline[i+1] ?
                     finish = `${new Date(e.timeline[i+1].dateTime).getHours()}:${new Date(e.timeline[i+1].dateTime).getMinutes()}`
-                : finish = 'ABERTO';
+                    : finish = 'ABERTO';
 
                 if(start === finish) continue;
-
-                if(e.timeline[i].itemType === timelineTypes.extraHours || bankSeconds > 0){
+                else if(e.timeline[i].itemType === timelineTypes.extraHours || bankSeconds > 0){
                     let seconds = (
                         new Date(`9999-12-31:${finish}`).getTime() - new Date(`9999-12-31:${start}`).getTime()
                     ) / 1000;
@@ -130,7 +141,7 @@
                             const bankEnd = (new Date(new Date(`9999-12-31:${start}`).getTime() + allowedBankSeconds * 1000));
                             const obj = {
                                 dateTime: bankEnd,
-                                itemType: 0
+                                itemType: timelineTypes.extraHours
                             }
 
                             e.timeline.insert(i+1, obj);
@@ -138,25 +149,25 @@
 
                             finish = `${bankEnd.getHours()}:${bankEnd.getMinutes()}`;
 
-                            extraType = `	BANCO`;
+                            appointmentType = `	BANCO`;
                         }else{
                             extraSeconds += seconds
-                            extraType = `	EXTRA`;
+                            appointmentType = `	EXTRA`;
                         }
                     }else{
                         bankSeconds += seconds;
-                        extraType = `	BANCO`;
+                        appointmentType = `	BANCO`;
                     }
                 }
 
-                content += (`${JSON.stringify(e.date)}	${start}	${finish}${extraType}\r\n`);
+                table += (`${JSON.stringify(e.date)}	${start}	${finish}${appointmentType}\r\n`);
                 previousCheckedDate = e.date;
             }
         })
-        return content;
+        return table;
     }
 
-    function newFormat(element) {
+    function getFormattedContent(element) {
         const dateTemplate = element.date.split("T")[0];
         const day = dateTemplate.split('-')[2];
         const month = dateTemplate.split('-')[1];
@@ -168,8 +179,8 @@
         if(timelineFormatted){
             timelineFormatted.forEach( () => {
                 timelineFormatted.forEach( (x, i) => {
-                    if(x.itemType === timelineTypes.undefinedFinish) { timelineFormatted.splice(i, 1); changed = true; }
-                    else if(x.itemType === timelineTypes.correctShouldBeFinish) { x.itemType = timelineTypes.extraHours; timelineFormatted.insert(i, x) };
+                    if(x.itemType === timelineTypes.undefinedEnd) { timelineFormatted.splice(i, 1); changed = true; }
+                    else if(x.itemType === timelineTypes.correctShouldBeEnd) { x.itemType = timelineTypes.extraHours; timelineFormatted.insert(i, x) };
                 })
             })
         }
@@ -184,12 +195,12 @@
 
     const timelineTypes = {
         extraHours: 0,
-        undefinedFinish: 1,
+        undefinedEnd: 1,
         incorrectAppointedStart: 2,
-        incorrectAppointedFinish: 3,
-        correctShouldBeFinish: 7,
+        incorrectAppointedEnd: 3,
+        correctShouldBeEnd: 7,
         correctAppointedStart: 10,
-        correctAppointedFinish: 21,
+        correctAppointedEnd: 21,
     }
 
     const customContent = {
