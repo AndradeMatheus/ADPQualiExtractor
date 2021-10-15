@@ -19,6 +19,8 @@ This is currently working, but is deprecated in favor of a in-development [Chrom
 
 3. The script is ready to run automatically at https://expert.brasil.adp.com/
 
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* PS: If you need to update the script manually, access the link from step 2.
+
 ## Usage
 
 After a successful login on ADP's appointment website, head over to your appointment history and check out the month you want to copy.
