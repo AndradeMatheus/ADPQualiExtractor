@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ADP QUALICORP TIMESHET CLIPBOARD
 // @namespace    https://github.com/AndradeMatheus/ADPQualiExtractor/
-// @version      0.7
+// @version      1.0
 // @description  Copy month's appointments to clipboard
 // @author       Matheus Andrade (Tetis) [github.com/AndradeMatheus]
 // @copyright    2021+, Matheus Andrade (https://github.com/AndradeMatheus)
@@ -88,7 +88,7 @@
         el.select();
         try {
             const successful = document.execCommand('copy');
-            successful ? alert('Tabela copiada com sucesso') : alert('Houve um erro ao copiar a tabela');
+            successful ? alert('Tabela copiada com sucesso. Obrigado por usar minha ferramenta! :) \n-- Matheus Andrade') : alert('Houve um erro ao copiar a tabela :(');
         } catch (err) {
             alert('Unable to copy' + err);
         }finally{
