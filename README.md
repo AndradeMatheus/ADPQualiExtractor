@@ -23,11 +23,10 @@ This is currently working, but is deprecated in favor of a in-development [Chrom
 
 After a successful login on ADP's appointment website, head over to your appointment history and check out the month you want to copy.
 
-A button labeled "COPY" will be available at the top-right corner
+A button labeled "Timesheet" will be available at the sidebar.
 
-![ADP WEBSITE](https://i.imgur.com/7N4nSdz.png)
+![ADP WEBSITE](https://i.imgur.com/BMn70wg.png)
 
-* Press the "COPY" button to copy the current visualized appointment month to your clipboard with no intervals (first entry and last exit).
-* Press the "COPY W/ INTERVALS" button to copy a month with all intervals.
+* Press the "Timesheet" button to copy the current visualized appointment month to your clipboard with intervals and bank hours/extra appointments.
 
 The format is based on Qualicorp's timesheet and should be pasted on an Excel file.
