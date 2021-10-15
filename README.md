@@ -29,4 +29,8 @@ A button labeled "Timesheet" will be available at the sidebar.
 
 * Press the "Timesheet" button to copy the current visualized appointment month to your clipboard with intervals and bank hours/extra appointments.
 
-The format is based on Qualicorp's timesheet and should be pasted on an Excel file.
+The format is based on Qualicorp's timesheet and should be pasted on an Excel file, as shown below:
+
+![EXCEL](https://i.imgur.com/8MlItEl.png)
+
+Thank you for using this tool :)
