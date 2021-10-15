@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ADP QUALICORP TIMESHET CLIPBOARD
 // @namespace    https://github.com/AndradeMatheus/ADPQualiExtractor/
-// @version      0.4
+// @version      0.5
 // @description  Copy month's appointments to clipboard
 // @author       Matheus Andrade (Tetis) [github.com/AndradeMatheus]
 // @copyright    2021+, Matheus Andrade (https://github.com/AndradeMatheus)
@@ -28,9 +28,7 @@
     }
 
     window.addEventListener('load', () => {
-        addButton('COPY', false, false, { top: '7%', right: '4%'});
-        addButton('COPY W/ INTERVALS', true, false, { top: '11%', right: '4%'});
-        addButton('COPY EXTRAS FORM', true, true, { top: '15%', right: '4%'});
+        addButton('COPY', true, true, { top: '7%', right: '4%'});
     })
 
     function addButton(text, intervals, extras, position, cssObj) {
