@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ADP QUALICORP TIMESHET CLIPBOARD
 // @namespace    https://github.com/AndradeMatheus/ADPQualiExtractor/
-// @version      1.0.2
+// @version      1.1
 // @description  Copy month's appointments to clipboard
 // @author       Matheus Andrade (Tetis) [github.com/AndradeMatheus]
 // @copyright    2021+, Matheus Andrade (https://github.com/AndradeMatheus)
@@ -28,7 +28,7 @@
         const buttonDOM = document.createElement('a');
         buttonDOM.innerHTML = buttonHTML;
         buttonDOM.addEventListener('click', function(){
-            func();
+            func(custom);
         });
 
         const sidebar = document.getElementsByClassName('display-block-md display-none bg-blue-4 text-center')[0];
@@ -38,12 +38,18 @@
         return buttonDOM
     }
 
-    async function copyTimesheet() {
+    async function copyTimesheet(customContent) {
+        setButtonLoadingByClass(customContent);
         const date = getDate();
         const content = await getContent(date);
         const table = formatTimesheet(content);
         copyToClipBoard(table);
+        setButtonDoneByClass(customContent);
     }
+
+    function setButtonLoadingByClass(customContent) { document.getElementsByClassName(customContent.class)[0].children[0].src = customContent.loadingIcon }
+
+    function setButtonDoneByClass(customContent) { document.getElementsByClassName(customContent.class)[0].children[0].src = customContent.defaultIcon }
 
     function getDate() {
         const currentMonth = new Date().getMonth() + 1 < 10 ? `0${new Date().getMonth() + 1}` : new Date().getMonth() + 1;
@@ -66,7 +72,7 @@
 
     function formatTimesheet(content) {
         const timesheet = content.data.timetable;
-        
+
         const workdays = getWorkdays(timesheet);
         return getFormattedTimesheet(workdays);
     }
@@ -104,9 +110,9 @@
 
     function getFormattedTimesheet(timeTable){
         const headers = [
-            {key:"date", title:"Data"}, 
-            {key:"timelineStart", title: "Inicio"}, 
-            {key:"timelineEnd", title:"Fim"}, 
+            {key:"date", title:"Data"},
+            {key:"timelineStart", title: "Inicio"},
+            {key:"timelineEnd", title:"Fim"},
             {key:"appointmentType", title:"Tipo"}
         ];
         let table = (headers.map(m => m.title).join('	')) + '\r\n';
@@ -122,7 +128,7 @@
                 let start = '', finish = '', appointmentType = '	NORMAL';
 
                 start = `${new Date(e.timeline[i].dateTime).getHours()}:${new Date(e.timeline[i].dateTime).getMinutes()}`;
-                
+
                 e.timeline[i+1] ?
                     finish = `${new Date(e.timeline[i+1].dateTime).getHours()}:${new Date(e.timeline[i+1].dateTime).getMinutes()}`
                     : finish = 'ABERTO';
@@ -205,20 +211,24 @@
 
     const customContent = {
         whiteCopyOutline: {
-            icon:'<img src="https://img.icons8.com/pastel-glyph/32/000000/copy--v1.png" style="filter: invert(1)"/>'
+            img:`<img src="https://i.imgur.com/H8kRu06.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
+            defaultIcon: `https://i.imgur.com/H8kRu06.png`,
+            loadingIcon: `https://i.imgur.com/SuSpLnI.gif`,
+            class:`timesheet-copy`
         }
     }
 
     const excludeURL = `https://expert.brasil.adp.com/expert/v4/?lp=true`
+    const defaultButtonClass = `display-block w-100 text-left text-center-md relative border-none m0 p2 py2 p1-md py3-md text-white decoration-none bg-transparent bg-blue-3-hover pointer`
 
     function getButtonHTML(label, custom){
     return `<a
-        class="display-block w-100 text-left text-center-md relative border-none m0 p2 py2 p1-md py3-md text-white decoration-none bg-transparent bg-blue-3-hover pointer timelinecopy ${custom.class || ''}"
+        class="${defaultButtonClass} ${custom.class || ''}"
         style=${custom.style || ''}
         data-metrics-event-action="test"
         data-testid="btn_timeline-copy"
     >
-    ${custom.icon || ''}
+    ${custom.img || ''}
     <span
         class="
         display-inline-block display-block-md
