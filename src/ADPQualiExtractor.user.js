@@ -1,13 +1,13 @@
 // ==UserScript==
 // @name         ADP QUALICORP TIMESHET CLIPBOARD
 // @namespace    https://github.com/AndradeMatheus/ADPQualiExtractor/
-// @version      1.0
+// @version      1.0.1
 // @description  Copy month's appointments to clipboard
 // @author       Matheus Andrade (Tetis) [github.com/AndradeMatheus]
 // @copyright    2021+, Matheus Andrade (https://github.com/AndradeMatheus)
 // @homepageURL  https://github.com/AndradeMatheus/ADPQualiExtractor/
-// @match        https://expert.brasil.adp.com/
-// @include      https://expert.brasil.adp.com/*
+// @match        https://expert.brasil.adp.com/expert/v4/
+// @include      https://expert.brasil.adp.com/expert/v4/*
 // @require      https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/src/axios.min.js
 // @require      https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/src/axiosGmxhrAdapter.min.js
 // @icon         https://www.google.com/s2/favicons?domain=adp.com
@@ -19,21 +19,21 @@
 
     window.addEventListener('load', () => {
         setTimeout( function(){
-            addButton('Timesheet', customContent.whiteCopyOutline);
+            addButton('Timesheet', customContent.whiteCopyOutline, copyTable);
         }, 2000)
     })
 
-    function addButton(label, custom) {
+    function addButton(label, custom, func) {
         const buttonHTML = getButtonHTML(label, custom);
         const buttonDOM = document.createElement('a');
         buttonDOM.innerHTML = buttonHTML;
         buttonDOM.addEventListener('click', function(){
-            copyTable();
+            func();
         });
 
         const sidebar = document.getElementsByClassName('display-block-md display-none bg-blue-4 text-center')[0];
         if(sidebar) sidebar.appendChild(buttonDOM);
-        else alert('Ocorreu um erro ao carregar o botão de cópia de timesheet :( \n Por favor, recarregue a página.');
+        else if(window.location.href != excludeURL) alert(`Ocorreu um erro ao carregar o botão ${label} :( \n Por favor, recarregue a página.`);
 
         return buttonDOM
     }
@@ -194,21 +194,20 @@
 
     const customContent = {
         whiteCopyOutline: {
-            icon:'<img src="https://img.icons8.com/pastel-glyph/32/000000/copy--v1.png" style="filter: invert(1)"/>',
-            style: '',
-            class: '',
-            div: ''
+            icon:'<img src="https://img.icons8.com/pastel-glyph/32/000000/copy--v1.png" style="filter: invert(1)"/>'
         }
     }
 
+    const excludeURL = `https://expert.brasil.adp.com/expert/v4/?lp=true`
+
     function getButtonHTML(label, custom){
     return `<a
-        class="display-block w-100 text-left text-center-md relative border-none m0 p2 py2 p1-md py3-md text-white decoration-none bg-transparent bg-blue-3-hover pointer timelinecopy ${custom.class}"
-        style=${custom.style}
+        class="display-block w-100 text-left text-center-md relative border-none m0 p2 py2 p1-md py3-md text-white decoration-none bg-transparent bg-blue-3-hover pointer timelinecopy ${custom.class || ''}"
+        style=${custom.style || ''}
         data-metrics-event-action="test"
         data-testid="btn_timeline-copy"
     >
-    ${custom.icon}
+    ${custom.icon || ''}
     <span
         class="
         display-inline-block display-block-md
@@ -219,7 +218,7 @@
         data-testid="txt_timeline-copy"
     >${label}</span>
     </a>
-    ${custom.div}`
+    ${custom.div || ''}`
     }
 
     Array.prototype.insert = function ( index, item ) {
