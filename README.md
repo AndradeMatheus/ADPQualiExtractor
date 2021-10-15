@@ -1,8 +1,8 @@
 # Quali ADP Extractor
 
-Proof of concept of a ADP timesheet extractor.
+Proof of concept of an ADP timesheet extractor.
 
-This is currently working, but is deprecated in favor of a in-development [Chrome Extension](https://cdn.discordapp.com/attachments/842058104844714004/884799525003358249/unknown.png) with more features to come.
+This is currently working, but is deprecated in favor of an in-development [Chrome Extension](https://cdn.discordapp.com/attachments/842058104844714004/884799525003358249/unknown.png) with more features to come.
 
 **Other Readme languages**:
 
