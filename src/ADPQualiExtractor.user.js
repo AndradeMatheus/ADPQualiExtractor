@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ADP QUALICORP TIMESHET CLIPBOARD
 // @namespace    https://github.com/AndradeMatheus/ADPQualiExtractor/
-// @version      0.5
+// @version      0.6
 // @description  Copy month's appointments to clipboard
 // @author       Matheus Andrade (Tetis) [github.com/AndradeMatheus]
 // @copyright    2021+, Matheus Andrade (https://github.com/AndradeMatheus)
@@ -27,20 +27,28 @@
         correctAppointedFinish: 21,
     }
 
+    const icons = {
+        whiteCopyOutline: `<img src="https://img.icons8.com/pastel-glyph/32/000000/copy--v1.png" style="filter: invert(1)"/>`
+    }
+
     window.addEventListener('load', () => {
-        addButton('COPY', true, true, { top: '7%', right: '4%'});
+        setTimeout( function(){
+            addButton('Copiar Apontamento', icons.whiteCopyOutline, true, true);
+        }, 2000)
     })
 
-    function addButton(text, intervals, extras, position, cssObj) {
-        cssObj = cssObj || {position: 'absolute', top: position.top, right: position.right, 'z-index': 3}
-        let button = document.createElement('button'), btnStyle = button.style
-        document.body.appendChild(button)
-        button.innerHTML = text
-        button.addEventListener('click', function(){
+    function addButton(label, icon, intervals, extras) {
+        const sidebar = document.getElementsByClassName('display-block-md display-none bg-blue-4 text-center')[0];
+        const buttonHTML = getButtonHTML(label, icon);
+        const buttonDOM = document.createElement('a');
+        buttonDOM.innerHTML = buttonHTML;
+        buttonDOM.addEventListener('click', function(){
             copyTable(intervals, extras);
         });
-        Object.keys(cssObj).forEach(key => btnStyle[key] = cssObj[key])
-        return button
+
+        sidebar.appendChild(buttonDOM);
+
+        return buttonDOM
     }
 
     async function copyTable(intervals, extras) {
@@ -213,4 +221,24 @@
     Array.prototype.insert = function ( index, item ) {
         this.splice( index, 0, item );
     };
+
+    function getButtonHTML(label, icon){
+        return`<a
+  class="display-block w-100 text-left text-center-md relative border-none m0 p2 py2 p1-md py3-md text-white decoration-none bg-transparent bg-blue-3-hover pointer timelinecopy"
+  data-metrics-event-action="test"
+  data-testid="btn_timeline-copy"
+  >
+  ${icon}
+  <span
+    class="
+      display-inline-block display-block-md
+      v-align-middle
+      font-std-6
+      fw-300
+    "
+    data-testid="txt_timeline-copy"
+    >${label}</span
+  >
+  </a>`
+    }
 })(axios);
