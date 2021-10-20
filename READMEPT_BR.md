@@ -1,8 +1,10 @@
+![banner](https://i.imgur.com/Jx8MaDq.png)
+
 # Quali ADP Extractor
 
 POC de um script de extração de apontamentos do ADP.
 
-Esse script está funcionando atualmente, porém está descontinuado em favor do desenvolvimento de uma [extensão do chrome](https://cdn.discordapp.com/attachments/842058104844714004/884799525003358249/unknown.png) com mais funcionalidades previstas.
+Esse script está funcionando atualmente, e será atualizado regularmente, porém, será descontinuado em favor do desenvolvimento de uma [extensão do chrome](https://cdn.discordapp.com/attachments/842058104844714004/884799525003358249/unknown.png) com mais funcionalidades previstas.
 
 ## Instalação
 
