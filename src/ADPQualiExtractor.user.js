@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ADP QUALICORP TIMESHET CLIPBOARD
 // @namespace    https://github.com/AndradeMatheus/ADPQualiExtractor/
-// @version      1.1
+// @version      1.1.1
 // @description  Copy month's appointments to clipboard
 // @author       Matheus Andrade (Tetis) [github.com/AndradeMatheus]
 // @copyright    2021+, Matheus Andrade (https://github.com/AndradeMatheus)
@@ -211,9 +211,9 @@
 
     const customContent = {
         whiteCopyOutline: {
-            img:`<img src="https://i.imgur.com/H8kRu06.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
-            defaultIcon: `https://i.imgur.com/H8kRu06.png`,
-            loadingIcon: `https://i.imgur.com/SuSpLnI.gif`,
+            img:`<img src="https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/copy_icon.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
+            defaultIcon: `https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/copy_icon.png`,
+            loadingIcon: `https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/loading_icon.gif`,
             class:`timesheet-copy`
         }
     }
