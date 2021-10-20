@@ -1,11 +1,12 @@
 // ==UserScript==
 // @name         ADP QUALICORP TIMESHET CLIPBOARD
 // @namespace    https://github.com/AndradeMatheus/ADPQualiExtractor/
-// @version      1.1.1
+// @version      1.2
 // @description  Copy month's appointments to clipboard
 // @author       Matheus Andrade (Tetis) [github.com/AndradeMatheus]
 // @copyright    2021+, Matheus Andrade (https://github.com/AndradeMatheus)
 // @homepageURL  https://github.com/AndradeMatheus/ADPQualiExtractor/
+// @updateURL    https://github.com/AndradeMatheus/ADPQualiExtractor/raw/master/src/ADPQualiExtractor.user.js
 // @match        https://expert.brasil.adp.com/expert/v4/
 // @include      https://expert.brasil.adp.com/expert/v4/*
 // @require      https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/src/axios.min.js
@@ -19,7 +20,8 @@
 
     window.addEventListener('load', () => {
         setTimeout( function(){
-            addButton('Timesheet', customContent.whiteCopyOutline, copyTimesheet);
+            addButton('Timesheet copy', customContent.whiteCopyOutline, copyTimesheetToClipboard);
+            addButton('Timesheet CSV', customContent.whiteDownloadSheetOutline, downloadTimesheet);
         }, 2000)
     })
 
@@ -38,18 +40,25 @@
         return buttonDOM
     }
 
-    async function copyTimesheet(customContent) {
-        setButtonLoadingByClass(customContent);
+    async function copyTimesheetToClipboard(customContent) {
+        setButtonImageByClass(customContent, 'loading');
         const date = getDate();
         const content = await getContent(date);
-        const table = formatTimesheet(content);
+        const table = formatTimesheet(content, tableDelimiterTypes.clipboard);
         copyToClipBoard(table);
-        setButtonDoneByClass(customContent);
+        setButtonImageByClass(customContent, 'default');
     }
 
-    function setButtonLoadingByClass(customContent) { document.getElementsByClassName(customContent.class)[0].children[0].src = customContent.loadingIcon }
+    async function downloadTimesheet(customContent){
+        setButtonImageByClass(customContent, 'loading');
+        const date = getDate();
+        const content = await getContent(date);
+        const table = formatTimesheet(content, tableDelimiterTypes.csv);
+        downloadCSV(table, date);
+        setButtonImageByClass(customContent, 'default');
+    }
 
-    function setButtonDoneByClass(customContent) { document.getElementsByClassName(customContent.class)[0].children[0].src = customContent.defaultIcon }
+    function setButtonImageByClass(customContent, type) { document.getElementsByClassName(customContent.class)[0].children[0].src = customContent.icons[type] }
 
     function getDate() {
         const currentMonth = new Date().getMonth() + 1 < 10 ? `0${new Date().getMonth() + 1}` : new Date().getMonth() + 1;
@@ -70,11 +79,11 @@
         });
     }
 
-    function formatTimesheet(content) {
+    function formatTimesheet(content, delimiter) {
         const timesheet = content.data.timetable;
 
         const workdays = getWorkdays(timesheet);
-        return getFormattedTimesheet(workdays);
+        return getFormattedTimesheet(workdays, delimiter);
     }
 
     function copyToClipBoard(content) {
@@ -108,14 +117,30 @@
         return workdays;
     }
 
-    function getFormattedTimesheet(timeTable){
+    function downloadCSV(table, date){
+        const csvHeader = "data:text/csv;charset=utf-8";
+        const csvContent = csvHeader.concat(',', table);
+        const encodedURI = encodeURI(csvContent);
+
+        const username = document.getElementsByClassName("display-flex align-self-center mx2 text-transform-uppercase fw-bold font-std-5")[0].innerText;
+
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedURI);
+        link.setAttribute("download", `${username.split(' ').join('_')}_TIMESHEET_${date.year}-${date.month}.csv`);
+        document.body.appendChild(link);
+
+        link.click()
+    }
+
+
+    function getFormattedTimesheet(timeTable, delimiter){
         const headers = [
             {key:"date", title:"Data"},
             {key:"timelineStart", title: "Inicio"},
             {key:"timelineEnd", title:"Fim"},
             {key:"appointmentType", title:"Tipo"}
         ];
-        let table = (headers.map(m => m.title).join('	')) + '\r\n';
+        let table = (headers.map(m => m.title).join(delimiter)) + '\r\n';
 
         timeTable.forEach( e => {
             const allowedBankSeconds = 6300
@@ -125,7 +150,7 @@
             for (let i = 0; i < e.timeline.length; i = i+2) {
                 if(e.date !== previousCheckedDate) { bankSeconds = 0; extraSeconds = 0; }
 
-                let start = '', finish = '', appointmentType = '	NORMAL';
+                let start = '', finish = '', appointmentType = 'NORMAL';
 
                 start = `${new Date(e.timeline[i].dateTime).getHours()}:${new Date(e.timeline[i].dateTime).getMinutes()}`;
 
@@ -155,18 +180,18 @@
 
                             finish = `${bankEnd.getHours()}:${bankEnd.getMinutes()}`;
 
-                            appointmentType = `	BANCO`;
+                            appointmentType = `BANCO`;
                         }else{
                             extraSeconds += seconds
-                            appointmentType = `	EXTRA`;
+                            appointmentType = `EXTRA`;
                         }
                     }else{
                         bankSeconds += seconds;
-                        appointmentType = `	BANCO`;
+                        appointmentType = `BANCO`;
                     }
                 }
 
-                table += (`${JSON.stringify(e.date)}	${start}	${finish}${appointmentType}\r\n`);
+                table += (`${JSON.stringify(e.date)}${delimiter}${start}${delimiter}${finish}${appointmentType ? delimiter + appointmentType : ''}\r\n`);
                 previousCheckedDate = e.date;
             }
         })
@@ -199,6 +224,11 @@
         }
     }
 
+    const tableDelimiterTypes = {
+        csv: ',',
+        clipboard: '	'
+    }
+
     const timelineTypes = {
         extraHours: 0,
         undefinedEnd: 1,
@@ -212,9 +242,19 @@
     const customContent = {
         whiteCopyOutline: {
             img:`<img src="https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/copy_icon.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
-            defaultIcon: `https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/copy_icon.png`,
-            loadingIcon: `https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/loading_icon.gif`,
+            icons: {
+                default: `https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/copy_icon.png`,
+                loading: `https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/loading_icon.gif`
+            },
             class:`timesheet-copy`
+        },
+        whiteDownloadSheetOutline: {
+            img:`<img src="https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/download_icon.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
+            icons: {
+                default: `https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/download_icon.png`,
+                loading: `https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/loading_icon.gif`
+            },
+            class:`timesheet-download`
         }
     }
 
