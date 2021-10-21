@@ -1,5 +1,7 @@
 // consts.js
 
+const Notify = new XNotify();
+
 const customContent = {
     whiteCopyOutline: {
         img:`<img src="https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/copy_icon.png" class= "timesheet-copy" style="filter: invert(1)"/>`,

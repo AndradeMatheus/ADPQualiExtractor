@@ -10,7 +10,16 @@ function addButton(label, custom, func) {
 
     const sidebar = document.getElementsByClassName('display-block-md display-none bg-blue-4 text-center')[0];
     if(sidebar) sidebar.appendChild(buttonDOM);
-    else if(window.location.href != excludeURL) alert(`Ocorreu um erro ao carregar o botão ${label} :( \n Por favor, recarregue a página.`);
+    else if(window.location.href != excludeURL) {
+        Notify.alert({ 
+            position: "BottomRight",
+            title: "Atenção", 
+            color: "white",
+            background: "#F47B19",
+            borderRadius: "0px",
+            description: `Ocorreu um erro ao carregar o botão '${label}'. Por favor, recarregue a página.`
+        });
+    }        
 
     return buttonDOM
 }

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         ADP QUALICORP TIMESHET CLIPBOARD
 // @description  Copy month's appointments to clipboard
-// @version      1.2.1
+// @version      1.3
 // @author       Matheus Andrade (Tetis)
 // @copyright    2021+, Matheus Andrade
 // @license      MIT
@@ -15,6 +15,7 @@
 // @include      http://expert.brasil.adp.com/expert/v4/*
 // @require      https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/src/axios/axios.min.js
 // @require      https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/src/axios/axiosGmxhrAdapter.min.js
+// @require      https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/src/x-notify/x-notify.min.js
 // @require      https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/src/utils/prototype.js
 // @require      https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/src/utils/consts.js
 // @require      https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/src/utils/button.js
@@ -27,8 +28,8 @@
 // ==/UserScript==
 
 /*
-ADP QUALI v1.2.1
-CHANGELOG: https://github.com/AndradeMatheus/ADPQualiExtractor/releases/tag/1.2.1
+ADP QUALI v1.3
+CHANGELOG: https://github.com/AndradeMatheus/ADPQualiExtractor/releases/tag/1.3
 */
 
-console.log('Loaded ADPQualiExtractor v1.2.1');
+console.log('Loaded ADPQualiExtractor v1.3');
