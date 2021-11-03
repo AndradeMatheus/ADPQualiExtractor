@@ -30,25 +30,34 @@ function getFormattedTimesheet(timeTable, delimiter){
         let previousCheckedDate;
         for (let i = 0; i < e.timeline.length; i = i+2) {
             if(e.date !== previousCheckedDate) { bankSeconds = 0; extraSeconds = 0; }
+
             let start = '', finish = '', appointmentType = 'NORMAL';
             start = `${new Date(e.timeline[i].dateTime).getHours()}:${new Date(e.timeline[i].dateTime).getMinutes()}`;
             e.timeline[i+1] ?
                 finish = `${new Date(e.timeline[i+1].dateTime).getHours()}:${new Date(e.timeline[i+1].dateTime).getMinutes()}`
                 : finish = 'ABERTO';
+
             if(start === finish) continue;
+            else if(e.timeline[0].itemType === timelineTypes.incorrectAppointedStart){
+                appointmentType = `EXTRA`;
+            }
             else if(e.timeline[i].itemType === timelineTypes.extraHours || bankSeconds > 0){
                 let seconds = (
                     new Date(`9999-12-31:${finish}`).getTime() - new Date(`9999-12-31:${start}`).getTime()
                 ) / 1000;
+
+
                 if(seconds > allowedBankSeconds || bankSeconds === allowedBankSeconds){
                     if(bankSeconds === 0){
                         bankSeconds = allowedBankSeconds;
                         extraSeconds += seconds - allowedBankSeconds;
+
                         const bankEnd = (new Date(new Date(`9999-12-31:${start}`).getTime() + allowedBankSeconds * 1000));
                         const obj = {
                             dateTime: bankEnd,
                             itemType: timelineTypes.extraHours
                         }
+
                         e.timeline.insert(i+1, obj);
                         e.timeline.insert(i+2, obj);
                         finish = `${bankEnd.getHours()}:${bankEnd.getMinutes()}`;
