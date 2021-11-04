@@ -40,11 +40,23 @@ function downloadCSV(table, date){
     }
 }
 
-function createNotify(title, background, description){
+async function checkVersionUpdate(){
+    let lastVersion = await fetch('https://api.npoint.io/13b6c19a15f509f5731f').then(response => response.json())
+    if(lastVersion && scriptVersion){
+        if(lastVersion.version > scriptVersion){
+            setButtonImageByClass(customContent.whiteUpdateOutline, 'notification')
+            createNotify("Atenção", "#1A8099", `O script está desatualizado. Por favor, aperte o botão de 'Force Update' para obter a última versão.`)
+        }
+    }
+    console.log(lastVersion.version > "1.3.1");
+}
+
+function createNotify(title, background, description, duration){
     Notify.alert({ 
         title,
         description,
         background,
+        duration,
         position: "BottomRight",
         color: "white",
         borderRadius: "0px"

@@ -2,6 +2,8 @@
 
 const Notify = new XNotify();
 
+const scriptVersion = GM_info.script.version; 
+
 const customContent = {
     whiteCopyOutline: {
         img:`<img src="https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/copy_icon.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
@@ -21,6 +23,10 @@ const customContent = {
     },
     whiteUpdateOutline: {
         img:`<img src="https://i.imgur.com/lbrDris.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
+        icons: {
+            default: `https://i.imgur.com/lbrDris.png`,
+            notification: `https://i.imgur.com/c7pdk9P.png`
+        },
         class:`adp-script-update`
     },
     whiteGithubFill: {

@@ -20,6 +20,7 @@ async function downloadTimesheet(customContent){
 
 async function updateScript(){
     window.open('http://github.com/AndradeMatheus/ADPQualiExtractor/raw/master/src/ADPQualiExtractor.user.js');
+    setButtonImageByClass(customContent.whiteUpdateOutline, 'default')
 }
 
 function redirectGithub(){
