@@ -1,36 +1,66 @@
 ![banner](https://i.imgur.com/Jx8MaDq.png)
 
-# Quali ADP Extractor
-
-POC de um script de extração de apontamentos do ADP.
-
-Esse script está funcionando atualmente, e será atualizado regularmente, porém, será descontinuado em favor do desenvolvimento de uma [extensão do chrome](https://cdn.discordapp.com/attachments/842058104844714004/884799525003358249/unknown.png) com mais funcionalidades previstas.
+Faça a extração dos meses apontados para a área de transferência ou um CSV.
 
 ## Instalação
 
-1. Instale Tampermonkey/Greasemonkey no seu navegador.
+1. Instale Tampermonkey/Greasemonkey no seu navegador:
   * [Tampermonkey na chrome web store](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo?hl=en)
   * [Tampermonkey no mozila addons](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)
   * [Tampermonkey na microsoft edge store](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
 
-2. Com o Tampermonkey/Greasemonkey instalado, abra [esse link](https://github.com/AndradeMatheus/ADPQualiExtractor/raw/master/src/ADPQualiExtractor.user.js) e pressione 'install'.
+2. Com o Tampermonkey/Greasemonkey instalado, abra [esse link](https://github.com/AndradeMatheus/ADPQualiExtractor/raw/master/src/ADPQualiExtractor.user.js) e pressione 'install'
 
-3. O script está pronto para ser executado automaticamente no https://expert.brasil.adp.com/
+3. O script está pronto para ser executado automaticamente no https://expert.brasil.adp.com/v4/
 
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;* **OBS: Caso necessite atualizar o script manualmente, apenas acesse o link do passo 2.**
+## Atualização
+
+* O script será automaticamente atualizado pelo tampermonkey.
+   * Caso o tampermonkey não consiga atualizar o script, o usuário será notificado se uma versão mais atual existir, podendo atualizar manualmente o script pelo botão 'Force update' na seção 'Script'
+
+## Desinstalação
+
+1. Abra a dashboard do tampermonkey
+
+2. Na dashboard, delete o script "ADP QUALICORP TIMESHET CLIPBOARD"
+
+  * Caso opte por desinstalar o tampermonkey, vá para chrome://extensions e delete a extensão;
+      * Isso também desativa o script "ADP QUALICORP TIMESHET CLIPBOARD" automaticamente.
 
 ## Uso
 
-Depois de realizar login no site do ADP web, vá para o histórico de apontamentos e visualize o mês que você deseja copiar.
+Após realizar login no site do ADP web, vá para o histórico de apontamentos e visualize o mês que você deseja copiar.
 
-Um botão com a label "Timesheet" vai estar disponível na barra lateral.
+Duas seções adicionais serão criadas na barra lateral do site:
 
-![ADP WEBSITE](https://i.imgur.com/BMn70wg.png)
+![SIDEBAR](https://i.imgur.com/8AakRUK.png)
 
-* Pressione o botão "Timesheet" para copiar o mês atualmente visualizado para a área de transferência com os horários com intervalo e conteúdo de banco de horas e extras.
+  * Notificações e alertas referentes ao script aparecerão no canto inferior direito do site.
 
-O formato é baseado no timesheet da Qualicorp e deve ser colado em um arquivo Excel, como no exemplo abaixo:
+### - Timesheet
 
-![EXCEL](https://i.imgur.com/8MlItEl.png)
+Abaixo da seção "Timesheet", haverá 2 botões:
 
-Obrigado por usar a ferramenta :)
+* Copy: Copie o mês atualmente visualizado para a área de transferência (clipboard).
+
+* CSV: Baixe a extração do mês atualmente visualizado para um arquivo CSV.
+
+O formato é baseado no timesheet da Qualicorp, com horários baseados em intervalo e conteúdo de banco de horas/extras.
+
+### - Script
+
+Nessa seção, temos 3 botões:
+
+* Force update: Checagem manual de atualizações do script.
+
+* Help: Redirect para a página de issues desse repo.
+
+* GitHub: Redirect para a página principal desse repo.
+
+### - ADP
+
+Nessa seção constam todas as funções originais do site sem nenhuma alteração.
+
+---
+
+### Obrigado por usar a minha ferramenta :)
