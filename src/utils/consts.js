@@ -18,6 +18,18 @@ const customContent = {
             loading: `https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/loading_icon.gif`
         },
         class:`timesheet-download`
+    },
+    whiteUpdateOutline: {
+        img:`<img src="https://i.imgur.com/lbrDris.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
+        class:`adp-script-update`
+    },
+    whiteGithubFill: {
+        img:`<img src="https://i.imgur.com/Qua6UpD.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
+        class:`github-redirect`
+    },
+    whiteHelpOutLine: {
+        img:`<img src="https://i.imgur.com/v9boZlm.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
+        class:`github-issues-redirect`
     }
 }
 

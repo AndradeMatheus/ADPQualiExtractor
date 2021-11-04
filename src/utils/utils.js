@@ -12,32 +12,11 @@ function copyToClipBoard(content) {
     el.select();
     try {
         const successful = document.execCommand('copy');
-        successful ? Notify.success({ 
-            position: "BottomRight",
-            title: "Sucesso", 
-            color: "white",
-            background: "#1A871A",
-            borderRadius: "0px",
-            description: `Tabela copiada com sucesso :)`
-        }) 
-        : Notify.error({ 
-            position: "BottomRight",
-            title: "Erro", 
-            color: "white",
-            background: "#D40F0F",
-            borderRadius: "0px",
-            description: `Houve um erro ao copiar a tabela :(`
-        }) 
+        successful ? createNotify("Sucesso", "#1A871A", 'Tabela copiada com sucesso :)')
+        : createNotify("Erro", "#D40F0F", `Houve um erro ao copiar a tabela :(`)
     } catch (err) {
         console.log(err);
-        Notify.error({ 
-            position: "BottomRight",
-            title: "Erro", 
-            color: "white",
-            background: "#D40F0F",
-            borderRadius: "0px",
-            description: `Houve um erro ao copiar a tabela :(`
-        })
+        createNotify("Erro", "#D40F0F", `Houve um erro ao copiar a tabela :(`)
     }finally{
         document.body.removeChild(el);
     }
@@ -54,24 +33,20 @@ function downloadCSV(table, date){
     document.body.appendChild(link);
     try{
         link.click();
-        
-        Notify.success({ 
-            position: "BottomRight",
-            title: "Sucesso", 
-            color: "white",
-            background: "#1A871A",
-            borderRadius: "0px",
-            description: `CSV gerado com sucesso :)`
-        }) ;
+        createNotify("Sucesso", "#1A871A", `CSV gerado com sucesso :)`)
     }catch(err){
         console.log(err);
-        Notify.error({ 
-            position: "BottomRight",
-            title: "Erro", 
-            color: "white",
-            background: "#D40F0F",
-            borderRadius: "0px",
-            description: `Houve um erro ao gerar o CSV :(`
-        })
+        createNotify("Erro", "#D40F0F", `Houve um erro ao gerar o CSV :(`)
     }
+}
+
+function createNotify(title, background, description){
+    Notify.alert({ 
+        title,
+        description,
+        background,
+        position: "BottomRight",
+        color: "white",
+        borderRadius: "0px"
+    })
 }

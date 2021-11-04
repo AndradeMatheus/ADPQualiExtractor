@@ -17,3 +17,15 @@ async function downloadTimesheet(customContent){
     downloadCSV(table, date);
     setButtonImageByClass(customContent, 'default');
 }
+
+async function updateScript(){
+    window.open('http://github.com/AndradeMatheus/ADPQualiExtractor/raw/master/src/ADPQualiExtractor.user.js');
+}
+
+function redirectGithub(){
+    window.open('https://github.com/AndradeMatheus/ADPQualiExtractor')
+}
+
+function redirectGithubIssues(){
+    window.open('https://github.com/AndradeMatheus/ADPQualiExtractor/issues')
+}
