@@ -22,19 +22,19 @@ const customContent = {
         class:`timesheet-download`
     },
     whiteUpdateOutline: {
-        img:`<img src="https://i.imgur.com/lbrDris.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
+        img:`<img src="https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/update_icon.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
         icons: {
-            default: `https://i.imgur.com/lbrDris.png`,
-            notification: `https://i.imgur.com/c7pdk9P.png`
+            default: `https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/update_icon.png`,
+            notification: `https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/update_icon_notify.png`
         },
         class:`adp-script-update`
     },
     whiteGithubFill: {
-        img:`<img src="https://i.imgur.com/Qua6UpD.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
+        img:`<img src="https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/github_icon.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
         class:`github-redirect`
     },
     whiteHelpOutLine: {
-        img:`<img src="https://i.imgur.com/v9boZlm.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
+        img:`<img src="https://raw.githubusercontent.com/AndradeMatheus/ADPQualiExtractor/master/assets/help_icon.png" class= "timesheet-copy" style="filter: invert(1)"/>`,
         class:`github-issues-redirect`
     }
 }
